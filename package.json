@@ -6,6 +6,9 @@
   "main": "",
   "author": "Rémi Andrieux <pimolo10300@gmail.com>",
   "scripts": {},
-  "dependencies": {},
+  "dependencies": {
+    "gulp": ">=3.8.6",
+    "browser-sync": ">=1.3.0"
+  },
   "preferGlobal": true
 }
