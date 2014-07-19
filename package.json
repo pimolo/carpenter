@@ -1,11 +1,11 @@
 {
-  "name": "mysandbox",
-  "version": "0.0.1",
-  "private": true,
-  "description": "mysandbox is a tool for testing your ideas faster.",
-  "main": "main.js",
-  "author": "Rémi Andrieux <pimolo10300@gmail.com>",
-  "scripts": {},
-  "dependencies": {},
-  "preferGlobal": true
+	"name": "mysandbox",
+	"version": "0.0.1",
+	"private": true,
+	"bin": {
+		"mysandbox": "./main.js"
+	},
+	"description": "mysandbox is a tool for testing your ideas faster.",
+	"author": "Rémi Andrieux <pimolo10300@gmail.com>",
+	"preferGlobal": true
 }
