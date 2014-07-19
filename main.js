@@ -1,27 +1,16 @@
 #!/usr/bin/env node
  // UTILITIES
-var fs = require('fs');
+var fs = require('fs'),
+	inquirer = require('inquirer'),
+	chalk = require('chalk');
 
-// console.log('Welcome to mysandbox.js, your favorite tool to test fastly your little projects !')
-console.log('Begin enter source files to create :')
+console.log(chalk.white('Welcome to ' + chalk.bold('mysandbox.js') + ', your favorite tool to quickly test your little projects !'));
 
-var files = [],
-	userIndex = 1;
-process.stdin.setEncoding('utf8');
-process.stdout.write(userIndex + '° ' + 'filename : ')
-process.stdin.on('readable', function () {
-	var fileName = process.stdin.read();
-	if (fileName !== null && fileName !== '' && fileName !== 'stop\n') {
-		// process.stdout.write(typeof fileName)
-		fileName = fileName.replace(/(\n)/, '');
-		files.push(fileName);
-		userIndex++;
-		process.stdout.write(userIndex + '° ' + 'filename : ')
-	}
-	if (fileName == 'stop\n') {
-		process.stdin.pause();
-		var namesToWrite = files.join('\n');
-		console.log('your files :\n' + namesToWrite);
-		console.log(files);
-	}
+inquirer.prompt([{
+	type: 'input',
+	name: 'files',
+	message: 'Enter source files to create, separated by commas'
+}], function (answers) {
+	var files = answers.files.replace(' ', '').split(',');
+	console.log(chalk.cyan('%s'), files);
 });
