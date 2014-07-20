@@ -113,9 +113,11 @@ inquirer.prompt([{
 	fs.mkdir(directory, function (err) {
 		if (err) return console.error(err);
 
-		// main.js
+		// Main
 		if (isNode(answers)) {
 			info.dependencies.express = '*';
+
+			// main.js
 			copy(path.join(__dirname, 'templates', 'main.js'), path.join(directory, 'main.js'));
 		} else {
 			// index.php
@@ -125,6 +127,34 @@ inquirer.prompt([{
 			if (answers.procfile) {
 				fs.writeFile(path.join(directory, 'composer.json'), JSON.stringify({}), errHandler);
 			}
+		}
+
+		//Task runner
+		if (answers.taskRunner === 'Gulp') {
+			info.devDependencies.gulp = '*';
+			switch(answers.cssTemplate) {
+				case 'Sass':
+					info.devDependencies['gulp-sass'] = '*';
+					break;
+				case 'Less':
+					info.devDependencies['gulp-less'] = '*';
+					break;
+				case 'Stylus':
+					info.devDependencies['gulp-stylus'] = '*';
+					break;
+			}
+			switch(answers.jsTemplate) {
+				case 'CoffeeScript':
+					info.devDependencies['gulp-coffee'] = '*';
+					break;
+			}
+			
+			// Gulpfile
+			parseTemplate(path.join(__dirname, 'templates', 'gulpfile.js'), path.join(directory, 'Gulpfile.js'), answers);
+		} else if (answers.taskRunner === 'Grunt') {
+			info.devDependencies.grunt = '*';
+			// Gruntfile
+			parseTemplate(path.join(__dirname, 'templates', 'Gruntfile.js'), path.join(directory, 'Gruntfile.js'), answers);
 		}
 
 		// Procfile
