@@ -67,7 +67,19 @@ inquirer.prompt([{
 	type: 'checkbox',
 	name: 'dependencies',
 	message: 'What optionnal dependencies do you want to be included ?',
-	choices: ['jQuery', 'AngularJS', 'Bootstrap', 'Font Awesome']
+	choices: [{
+		name: 'jQuery',
+		value: 'jquery'
+	}, {
+		name: 'AngularJS',
+		value: 'angular'
+	}, {
+		name: 'Bootstrap',
+		value: 'bootstrap'
+	}, {
+		name: 'Font Awesome',
+		value: 'fontawesome'
+	}]
 }, {
 	type: 'confirm',
 	name: 'procfile',
@@ -89,6 +101,13 @@ inquirer.prompt([{
 			dependencies: {},
 			devDependencies: {}
 		},
+		bower = {
+			name: answers.name,
+			version: '0.0.1',
+			description: '',
+			author: '',
+			dependencies: {}
+		},
 		directory = path.join(process.cwd(), answers.name);
 
 	fs.mkdir(directory, function (err) {
@@ -96,7 +115,7 @@ inquirer.prompt([{
 
 		// main.js
 		if (isNode(answers)) {
-			info.dependencies.express = '4.x';
+			info.dependencies.express = '*';
 			copy(path.join(__dirname, 'templates', 'main.js'), path.join(directory, 'main.js'));
 		} else {
 			// index.php
@@ -122,7 +141,21 @@ inquirer.prompt([{
 			procfile.end();
 		}
 
+		// Optional dependencies
+		if (answers.dependencies.length > 0) {
+			answers.dependencies.forEach(function (dep) {
+				bower.dependencies[dep] = '*';
+			});
+
+			// .bowerrc
+			if (isNode(answers))
+				fs.writeFile(path.join(directory, '.bowerrc'), '{"directory": "dist/bower_components"}', errHandler);
+
+			// bower.json
+			fs.writeFile(path.join(directory, 'bower.json'), JSON.stringify(bower, null, '\t'), errHandler);
+		}
+
 		// package.json
-		fs.writeFile(path.join(directory, 'package.json'), JSON.stringify(info), errHandler);
+		fs.writeFile(path.join(directory, 'package.json'), JSON.stringify(info, null, '\t'), errHandler);
 	});
 });
