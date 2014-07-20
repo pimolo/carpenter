@@ -5,15 +5,21 @@
 		<% if(data.dependencies.indexOf('bootstrap') !== -1) { %>
 		<link href="bower_components/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
 		<% } %>
+		<% if(data.dependencies.indexOf('fontawesome') !== -1) { %>
+		<link href="bower_components/fontawesome/css/font-awesome.min.css" rel="stylesheet">
+		<% } %>
 		<link href="css/main.css" rel="stylesheet">
 	</head>
 	<body>
 		<h1>Welcome to <%= data.name %> !</h1>
-		<p>Project informations: <span><% print(JSON.stringify(data)); %></span></p>
-		<% if(data.dependencies.indexOf('jquery') !== -1 || data.dependencies.indexOf('bootstrap') !== -1) { %>
+		<p>Project informations: <span><% print(JSON.stringify(data, null, '\t')); %></span></p>
+		<% if(data.dependencies.indexOf('jquery') !== -1) { %>
 		<script src="bower_components/jquery/dist/jquery.min.js"></script>
 		<% } %>
-		<% data.dependencies.indexOf('bootstrap') !== -1) { %>
+		<% if(data.dependencies.indexOf('angular') !== -1) { %>
+		<script src="bower_components/angular/angular.min.js"></script>
+		<% } %>
+		<% if(data.dependencies.indexOf('bootstrap') !== -1) { %>
 		<script src="bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
 		<% } %>
 		<script src="js/main.js"></script>

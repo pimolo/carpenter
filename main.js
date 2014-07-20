@@ -79,7 +79,12 @@ inquirer.prompt([{
 	}, {
 		name: 'Font Awesome',
 		value: 'fontawesome'
-	}]
+	}],
+	filter: function(answer) {
+		if(answer.indexOf('jquery') === -1 && (answer.indexOf('bootstrap') !== -1 || answer.indexOf('angular') !== -1))
+			answer.push('jquery');
+		return answer;
+	}
 }, {
 	type: 'confirm',
 	name: 'procfile',
@@ -111,7 +116,7 @@ inquirer.prompt([{
 		directory = path.join(process.cwd(), answers.name);
 
 	fs.mkdir(directory, function (err) {
-		if (err) return console.error(err);
+		if (err && err.code != 'EEXIST') return console.error(err);
 
 		// Main
 		if (isNode(answers)) {
@@ -130,40 +135,49 @@ inquirer.prompt([{
 		}
 		
 		// Templating language
-		switch(answers.htmlTemplate) {
-			case 'Jade':
-				parseTemplate(path.join(__dirname, 'templates', 'index.jade'), path.join(directory, 'views', 'index.jade'), answers);
-				break;
-			case 'EJS':
-				parseTemplate(path.join(__dirname, 'templates', 'index.html'), path.join(directory, 'views', 'index.ejs'), answers);
-				break;
-			default:
-				parseTemplate(path.join(__dirname, 'templates', 'index.html'), path.join(directory, 'views', 'index.html'), answers);
-		}
+		fs.mkdir(path.join(directory, 'views'), function (err) {
+			if (err && err.code != 'EEXIST') return console.error(err);
+			switch(answers.htmlTemplate) {
+				case 'Jade':
+					parseTemplate(path.join(__dirname, 'templates', 'index.jade'), path.join(directory, 'views', 'index.jade'), answers);
+					break;
+				case 'EJS':
+					parseTemplate(path.join(__dirname, 'templates', 'index.html'), path.join(directory, 'views', 'index.ejs'), answers);
+					break;
+				default:
+					parseTemplate(path.join(__dirname, 'templates', 'index.html'), path.join(directory, 'views', 'index.html'), answers);
+			}
+		});
 
 		// CSS template
-		switch(answers.cssTemplate) {
-			case 'Sass':
-				copy(path.join(__dirname, 'templates', 'main.css'), path.join(directory, 'css', 'main.scss'));
-				break;
-			case 'Less':
-				copy(path.join(__dirname, 'templates', 'main.css'), path.join(directory, 'css', 'main.less'));
-				break;
-			case 'Stylus':
-				copy(path.join(__dirname, 'templates', 'main.css'), path.join(directory, 'css', 'main.styl'));
-				break;
-			default:
-				copy(path.join(__dirname, 'templates', 'main.css'), path.join(directory, 'css', 'main.css'));
-		}
+		fs.mkdir(path.join(directory, 'css'), function (err) {
+			if (err && err.code != 'EEXIST') return console.error(err);
+			switch(answers.cssTemplate) {
+				case 'Sass':
+					copy(path.join(__dirname, 'templates', 'main.css'), path.join(directory, 'css', 'main.scss'));
+					break;
+				case 'Less':
+					copy(path.join(__dirname, 'templates', 'main.css'), path.join(directory, 'css', 'main.less'));
+					break;
+				case 'Stylus':
+					copy(path.join(__dirname, 'templates', 'main.css'), path.join(directory, 'css', 'main.styl'));
+					break;
+				default:
+					copy(path.join(__dirname, 'templates', 'main.css'), path.join(directory, 'css', 'main.css'));
+			}
+		});
 		
 		// JS template
-		switch(answers.cssTemplate) {
-			case 'CoffeeScript':
-				copy(path.join(__dirname, 'templates', 'script.js'), path.join(directory, 'js', 'main.coffee'));
-				break;
-			default:
-				copy(path.join(__dirname, 'templates', 'script.js'), path.join(directory, 'js', 'main.js'));
-		}
+		fs.mkdir(path.join(directory, 'js'), function (err) {
+			if (err && err.code != 'EEXIST') return console.error(err);
+			switch(answers.jsTemplate) {
+				case 'CoffeeScript':
+					copy(path.join(__dirname, 'templates', 'script.js'), path.join(directory, 'js', 'main.coffee'));
+					break;
+				default:
+					copy(path.join(__dirname, 'templates', 'script.js'), path.join(directory, 'js', 'main.js'));
+			}
+		});
 
 		//Task runner
 		if (answers.taskRunner === 'Gulp') {
