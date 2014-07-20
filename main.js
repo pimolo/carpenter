@@ -121,17 +121,60 @@ inquirer.prompt([{
 			copy(path.join(__dirname, 'templates', 'main.js'), path.join(directory, 'main.js'));
 		} else {
 			// index.php
-			parseTemplate(path.join(__dirname, 'templates', 'index.php'), path.join(directory, 'index.php'), answers);
+			parseTemplate(path.join(__dirname, 'templates', 'index.html'), path.join(directory, 'index.php'), answers);
 
 			// composer.json
 			if (answers.procfile) {
 				fs.writeFile(path.join(directory, 'composer.json'), JSON.stringify({}), errHandler);
 			}
 		}
+		
+		// Templating language
+		switch(answers.htmlTemplate) {
+			case 'Jade':
+				parseTemplate(path.join(__dirname, 'templates', 'index.jade'), path.join(directory, 'views', 'index.jade'), answers);
+				break;
+			case 'EJS':
+				parseTemplate(path.join(__dirname, 'templates', 'index.html'), path.join(directory, 'views', 'index.ejs'), answers);
+				break;
+			default:
+				parseTemplate(path.join(__dirname, 'templates', 'index.html'), path.join(directory, 'views', 'index.html'), answers);
+		}
+
+		// CSS template
+		switch(answers.cssTemplate) {
+			case 'Sass':
+				copy(path.join(__dirname, 'templates', 'main.css'), path.join(directory, 'css', 'main.scss'));
+				break;
+			case 'Less':
+				copy(path.join(__dirname, 'templates', 'main.css'), path.join(directory, 'css', 'main.less'));
+				break;
+			case 'Stylus':
+				copy(path.join(__dirname, 'templates', 'main.css'), path.join(directory, 'css', 'main.styl'));
+				break;
+			default:
+				copy(path.join(__dirname, 'templates', 'main.css'), path.join(directory, 'css', 'main.css'));
+		}
+		
+		// JS template
+		switch(answers.cssTemplate) {
+			case 'CoffeeScript':
+				copy(path.join(__dirname, 'templates', 'script.js'), path.join(directory, 'js', 'main.coffee'));
+				break;
+			default:
+				copy(path.join(__dirname, 'templates', 'script.js'), path.join(directory, 'js', 'main.js'));
+		}
 
 		//Task runner
 		if (answers.taskRunner === 'Gulp') {
 			info.devDependencies.gulp = '*';
+			switch(answers.htmlTemplate) {
+				case 'Jade':
+					info.devDependencies['gulp-jade'] = '*';
+					break;
+				case 'EJS':
+					info.devDependencies['gulp-ejs'] = '*';
+			}
 			switch(answers.cssTemplate) {
 				case 'Sass':
 					info.devDependencies['gulp-sass'] = '*';
@@ -141,12 +184,10 @@ inquirer.prompt([{
 					break;
 				case 'Stylus':
 					info.devDependencies['gulp-stylus'] = '*';
-					break;
 			}
 			switch(answers.jsTemplate) {
 				case 'CoffeeScript':
 					info.devDependencies['gulp-coffee'] = '*';
-					break;
 			}
 			
 			// Gulpfile

@@ -1,0 +1,20 @@
+html
+	head
+		title <%= data.name %>
+		<% if(data.dependencies.indexOf('bootstrap') !== -1) { %>
+		link(href="bower_components/bootstrap/dist/css/bootstrap.min.css", rel="stylesheet")
+		<% } %>
+		link(href="css/main.css", rel="stylesheet")
+	body
+		h1 Welcome to <%= data.name %> !
+		p
+		| Project informations:
+		span.
+			<% print(JSON.stringify(data)); %>
+		<% if(data.dependencies.indexOf('jquery') !== -1 || data.dependencies.indexOf('bootstrap') !== -1) { %>
+		script(src="bower_components/jquery/dist/jquery.min.js")
+		<% } %>
+		<% data.dependencies.indexOf('bootstrap') !== -1) { %>
+		script(src="bower_components/bootstrap/dist/js/bootstrap.min.js")
+		<% } %>
+		script(src="js/main.js")
