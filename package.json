@@ -10,6 +10,7 @@
   "preferGlobal": true,
   "dependencies": {
     "inquirer": "^0.5.1",
-    "chalk": "^0.5.1"
+    "chalk": "^0.5.1",
+    "lodash": "^2.4.1"
   }
 }
