@@ -133,55 +133,59 @@ inquirer.prompt([{
 				fs.writeFile(path.join(directory, 'composer.json'), JSON.stringify({}), errHandler);
 			}
 		}
-		
-		// Templating language
-		fs.mkdir(path.join(directory, 'views'), function (err) {
+
+		fs.mkdir(path.join(directory, 'src'), function (err) {
 			if (err && err.code != 'EEXIST') return console.error(err);
+
+			// Templating language
 			switch(answers.htmlTemplate) {
 				case 'Jade':
-					parseTemplate(path.join(__dirname, 'templates', 'index.jade'), path.join(directory, 'views', 'index.jade'), answers);
+					parseTemplate(path.join(__dirname, 'templates', 'index.jade'), path.join(directory, 'src', 'index.jade'), answers);
 					break;
 				case 'EJS':
-					parseTemplate(path.join(__dirname, 'templates', 'index.html'), path.join(directory, 'views', 'index.ejs'), answers);
+					parseTemplate(path.join(__dirname, 'templates', 'index.html'), path.join(directory, 'src', 'index.ejs'), answers);
 					break;
 				default:
-					parseTemplate(path.join(__dirname, 'templates', 'index.html'), path.join(directory, 'views', 'index.html'), answers);
+					parseTemplate(path.join(__dirname, 'templates', 'index.html'), path.join(directory, 'src', 'index.html'), answers);
 			}
+
+			// CSS template
+			fs.mkdir(path.join(directory, 'src', 'css'), function (err) {
+				if (err && err.code != 'EEXIST') return console.error(err);
+				switch(answers.cssTemplate) {
+					case 'Sass':
+						copy(path.join(__dirname, 'templates', 'main.css'), path.join(directory, 'src', 'css', 'main.scss'));
+						break;
+					case 'Less':
+						copy(path.join(__dirname, 'templates', 'main.css'), path.join(directory, 'src', 'css', 'main.less'));
+						break;
+					case 'Stylus':
+						copy(path.join(__dirname, 'templates', 'main.css'), path.join(directory, 'src', 'css', 'main.styl'));
+						break;
+					default:
+						copy(path.join(__dirname, 'templates', 'main.css'), path.join(directory, 'src', 'css', 'main.css'));
+				}
+			});
+
+			// JS template
+			fs.mkdir(path.join(directory, 'src', 'js'), function (err) {
+				if (err && err.code != 'EEXIST') return console.error(err);
+				switch(answers.jsTemplate) {
+					case 'CoffeeScript':
+						copy(path.join(__dirname, 'templates', 'script.js'), path.join(directory, 'src', 'js', 'main.coffee'));
+						break;
+					default:
+						copy(path.join(__dirname, 'templates', 'script.js'), path.join(directory, 'src', 'js', 'main.js'));
+				}
+			});
 		});
 
-		// CSS template
-		fs.mkdir(path.join(directory, 'css'), function (err) {
-			if (err && err.code != 'EEXIST') return console.error(err);
-			switch(answers.cssTemplate) {
-				case 'Sass':
-					copy(path.join(__dirname, 'templates', 'main.css'), path.join(directory, 'css', 'main.scss'));
-					break;
-				case 'Less':
-					copy(path.join(__dirname, 'templates', 'main.css'), path.join(directory, 'css', 'main.less'));
-					break;
-				case 'Stylus':
-					copy(path.join(__dirname, 'templates', 'main.css'), path.join(directory, 'css', 'main.styl'));
-					break;
-				default:
-					copy(path.join(__dirname, 'templates', 'main.css'), path.join(directory, 'css', 'main.css'));
-			}
-		});
-		
-		// JS template
-		fs.mkdir(path.join(directory, 'js'), function (err) {
-			if (err && err.code != 'EEXIST') return console.error(err);
-			switch(answers.jsTemplate) {
-				case 'CoffeeScript':
-					copy(path.join(__dirname, 'templates', 'script.js'), path.join(directory, 'js', 'main.coffee'));
-					break;
-				default:
-					copy(path.join(__dirname, 'templates', 'script.js'), path.join(directory, 'js', 'main.js'));
-			}
-		});
 
 		//Task runner
 		if (answers.taskRunner === 'Gulp') {
 			info.devDependencies.gulp = '*';
+			info.devDependencies['gulp-livereload'] = '*';
+			info.devDependencies['gulp-sourcemaps'] = '*';
 			switch(answers.htmlTemplate) {
 				case 'Jade':
 					info.devDependencies['gulp-jade'] = '*';
@@ -203,7 +207,7 @@ inquirer.prompt([{
 				case 'CoffeeScript':
 					info.devDependencies['gulp-coffee'] = '*';
 			}
-			
+
 			// Gulpfile
 			parseTemplate(path.join(__dirname, 'templates', 'gulpfile.js'), path.join(directory, 'Gulpfile.js'), answers);
 		} else if (answers.taskRunner === 'Grunt') {
