@@ -186,6 +186,7 @@ inquirer.prompt([{
 			info.devDependencies.gulp = '*';
 			info.devDependencies['gulp-livereload'] = '*';
 			info.devDependencies['gulp-sourcemaps'] = '*';
+			info.devDependencies.openurl = '*';
 			switch(answers.htmlTemplate) {
 				case 'Jade':
 					info.devDependencies['gulp-jade'] = '*';

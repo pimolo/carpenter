@@ -35,6 +35,9 @@ The prompt asks you :
 * If you use a Javascript language (CoffeeScript)
 * If you want a task runner for automating compilating or reloading
 * If you want to use other dependencies, like Bootstrap, AngularJS...
+* If you want an Heroku Procfile to be generated
+* And if you use Heroku & PHP, what server do you want to use.
+
 
 **Please star, share and pull a request if you have ideas !**
 

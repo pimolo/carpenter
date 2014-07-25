@@ -1,5 +1,9 @@
 var gulp = require('gulp'),
 
+<% if(data.platform === 'Node.js') { %>
+	openurl = require('openurl'),
+<% } %>
+
 <% if(data.htmlTemplate === 'Jade') { %>
 	jade = require('gulp-jade'),
 <% } else if(data.htmlTemplate === 'EJS') { %>
@@ -109,6 +113,7 @@ gulp.task('serve', function() {
 		server = spawn('node', [script]);
 	server.stdout.pipe(process.stdout);
 	server.stderr.pipe(process.stderr);
+	openurl.open('http://localhost:3000');
 });
 <% } %>
 
