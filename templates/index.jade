@@ -11,8 +11,8 @@ html
 	body
 		h1 Welcome to <%= data.name %> !
 		p Project informations:
-			span.
-				<% print(JSON.stringify(data)); %>
+		pre.
+			<% print(JSON.stringify(data, 'null', '&#9;').replace(/\n/g, '<br>')) %>
 		<% if(data.dependencies.indexOf('jquery') !== -1) { %>
 		script(src="bower_components/jquery/dist/jquery.min.js")
 		<% } %>

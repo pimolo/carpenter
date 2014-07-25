@@ -116,7 +116,9 @@ gulp.task('serve', function() {
 		server = spawn('node', [script]);
 	server.stdout.pipe(process.stdout);
 	server.stderr.pipe(process.stderr);
+<% if(data.platform === 'Node.js') { %>
 	openurl.open('http://localhost:3000');
+<% } %>
 });
 <% } %>
 

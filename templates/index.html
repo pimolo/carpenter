@@ -12,7 +12,8 @@
 	</head>
 	<body>
 		<h1>Welcome to <%= data.name %> !</h1>
-		<p>Project informations: <span><% print(JSON.stringify(data, null, '\t')); %></span></p>
+		<p>Project informations: </p>
+		<pre><% print(JSON.stringify(data, null, '&#9;')) %></pre>
 		<% if(data.dependencies.indexOf('jquery') !== -1) { %>
 		<script src="bower_components/jquery/dist/jquery.min.js"></script>
 		<% } %>

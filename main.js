@@ -6,6 +6,7 @@ var fs = require('fs'),
 	_ = require('lodash'),
 	util = require('util'),
 	path = require('path'),
+	npm = require('npm'),
 	pkg = require('./package.json');
 
 console.log('Welcome to ' + chalk.bold(pkg.name) + ', your favorite tool to quickly create your little projects !');
@@ -109,6 +110,10 @@ inquirer.prompt([{
 			version: '0.0.1',
 			description: '',
 			author: '',
+			scripts: {
+				postinstall: 'bower -q install',
+				start: (answers.taskRunner !== 'None' ? answers.taskRunner.toLowerCase() : (answers.platform === 'Node.js' ? 'node main.js' : ''))
+			},
 			dependencies: {},
 			devDependencies: {}
 		},
@@ -307,5 +312,12 @@ inquirer.prompt([{
 
 		// package.json
 		fs.writeFile(path.join(directory, 'package.json'), JSON.stringify(info, null, '\t'), errHandler);
+
+		npm.load(function(err, npm) {
+			npm.prefix = directory;
+			npm.dir = npm.root = path.join(directory, 'node_modules');
+			npm.config.set('loglevel', 'error');
+			npm.install();
+		});
 	});
 });

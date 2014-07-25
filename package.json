@@ -10,11 +10,14 @@
     "url": "https://github.com/pimolo/carpenter/"
   },
   "author": "Rémi Andrieux <pimolo10300@gmail.com>",
-  "contributors": ["Léo-Paul Couturier <leopaul3@gmail.com>"],
+  "contributors": [
+    "Léo-Paul Couturier <leopaul3@gmail.com>"
+  ],
   "preferGlobal": true,
   "dependencies": {
     "inquirer": "^0.5.1",
     "chalk": "^0.5.1",
-    "lodash": "^2.4.1"
+    "lodash": "^2.4.1",
+    "npm": "^1.4.21"
   }
 }
