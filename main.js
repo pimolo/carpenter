@@ -61,7 +61,7 @@ inquirer.prompt([{
 		value: 'JS'
 	}, {
 		name: 'CoffeeScript',
-		value: 'coffee'
+		value: 'Coffee'
 	}],
 	when: isNode
 }, {
@@ -117,7 +117,10 @@ inquirer.prompt([{
 			version: '0.0.1',
 			description: '',
 			author: '',
-			dependencies: {}
+			dependencies: {},
+			devDependencies: {
+				livereload: '*'
+			}
 		},
 		directory = path.join(process.cwd(), answers.name);
 
@@ -177,7 +180,7 @@ inquirer.prompt([{
 			fs.mkdir(path.join(directory, 'src', 'js'), function (err) {
 				if (err && err.code != 'EEXIST') return console.error(err);
 				switch(answers.jsTemplate) {
-					case 'CoffeeScript':
+					case 'Coffee':
 						copy(path.join(__dirname, 'templates', 'script.js'), path.join(directory, 'src', 'js', 'main.coffee'));
 						break;
 					default:
@@ -211,7 +214,7 @@ inquirer.prompt([{
 					info.devDependencies['gulp-stylus'] = '*';
 			}
 			switch(answers.jsTemplate) {
-				case 'CoffeeScript':
+				case 'Coffee':
 					info.devDependencies['gulp-coffee'] = '*';
 			}
 
@@ -239,7 +242,7 @@ inquirer.prompt([{
 					info.devDependencies['grunt-contrib-stylus'] = '*';
 			}
 			switch(answers.jsTemplate) {
-				case 'CoffeeScript':
+				case 'Coffee':
 					info.devDependencies['grunt-contrib-coffee'] = '*';
 			}
 

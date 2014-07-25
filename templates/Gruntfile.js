@@ -8,7 +8,8 @@ module.exports = function(grunt) {
             html: {
                 files: [
                     {
-                        src: ['src/**/*.html'],
+                        src: ['**/*.html'],
+                        cwd: 'src/',
                         dest: 'dist/',
                         expand: true,
                     }
@@ -19,7 +20,8 @@ module.exports = function(grunt) {
             css: {
                 files: [
                     {
-                        src: ['src/**/*.css'],
+                        src: ['**/*.css'],
+                        cwd: 'src/',
                         dest: 'dist/',
                         expand: true,
                     }
@@ -30,7 +32,8 @@ module.exports = function(grunt) {
             js: {
                 files: [
                     {
-                        src: ['src/**/*.js'],
+                        src: ['**/*.js'],
+                        cwd: 'src/',
                         dest: 'dist/',
                         expand: true,
                     }
@@ -44,7 +47,8 @@ module.exports = function(grunt) {
             build: {
                 files: [
                     {
-                        src: ['src/**/*.jade'],
+                        src: ['**/*.jade'],
+                        cwd: 'src/',
                         dest: 'dist/',
                         expand: true,
                         ext: '.html'
@@ -55,7 +59,8 @@ module.exports = function(grunt) {
         <% } else if(data.htmlTemplate === 'EJS') { %>
         ejs: {
             build: {
-                src: ['src/**/*.ejs'],
+                src: ['**/*.ejs'],
+                cwd: 'src/',
                 dest: 'dist/',
                 expand: true,
                 ext: '.html'
@@ -67,7 +72,8 @@ module.exports = function(grunt) {
             build: {
                 files: [
                     {
-                        src: ['src/**/*.scss'],
+                        src: ['**/*.scss'],
+                        cwd: 'src/',
                         dest: 'dist/',
                         expand: true,
                         ext: '.css'
@@ -80,7 +86,8 @@ module.exports = function(grunt) {
             build: {
                 files: [
                     {
-                        src: ['src/**/*.less'],
+                        src: ['**/*.less'],
+                        cwd: 'src/',
                         dest: 'dist/',
                         expand: true,
                         ext: '.css'
@@ -93,7 +100,8 @@ module.exports = function(grunt) {
             build: {
                 files: [
                     {
-                        src: ['src/**/*.styl'],
+                        src: ['**/*.styl'],
+                        cwd: 'src/',
                         dest: 'dist/',
                         expand: true,
                         ext: '.css'
@@ -107,7 +115,8 @@ module.exports = function(grunt) {
             build: {
                 files: [
                     {
-                        src: ['src/**/*.coffee'],
+                        src: ['**/*.coffee'],
+                        cwd: 'src/',
                         dest: 'dist/',
                         expand: true,
                         ext: '.js'
