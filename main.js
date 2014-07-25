@@ -132,7 +132,7 @@ inquirer.prompt([{
 			info.dependencies.express = '*';
 
 			// main.js
-			copy(path.join(__dirname, 'templates', 'main.js'), path.join(directory, 'main.js'));
+			parseTemplate(path.join(__dirname, 'templates', 'main.js'), path.join(directory, 'main.js'), answers);
 		} else {
 			// index.php
 			parseTemplate(path.join(__dirname, 'templates', 'index.html'), path.join(directory, 'index.php'), answers);
@@ -253,6 +253,28 @@ inquirer.prompt([{
 
 			// Gruntfile
 			parseTemplate(path.join(__dirname, 'templates', 'Gruntfile.js'), path.join(directory, 'Gruntfile.js'), answers);
+		} else {
+			switch(answers.htmlTemplate) {
+				case 'Jade':
+					info.dependencies['connect-jade-html'] = '*';
+					break;
+				case 'EJS':
+					info.dependencies['ejs-middleware'] = '*';
+			}
+			switch(answers.cssTemplate) {
+				case 'Sass':
+					info.dependencies['sass-middleware'] = '*';
+					break;
+				case 'Less':
+					info.dependencies['less-middleware'] = '*';
+					break;
+				case 'Stylus':
+					info.dependencies['stylus'] = '*';
+			}
+			switch(answers.jsTemplate) {
+				case 'Coffee':
+					info.dependencies['coffee-middleware'] = '*';
+			}
 		}
 
 		// Procfile
