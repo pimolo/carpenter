@@ -123,9 +123,7 @@ inquirer.prompt([{
 			description: '',
 			author: '',
 			dependencies: {},
-			devDependencies: {
-				livereload: '*'
-			}
+			devDependencies: {}
 		},
 		directory = path.join(process.cwd(), answers.name);
 
