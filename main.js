@@ -297,18 +297,16 @@ inquirer.prompt([{
 		}
 
 		// Optional dependencies
-		if (answers.dependencies.length > 0) {
-			answers.dependencies.forEach(function (dep) {
-				bower.dependencies[dep] = '*';
-			});
+		answers.dependencies.forEach(function (dep) {
+			bower.dependencies[dep] = '*';
+		});
 
-			// .bowerrc
-			if (isNode(answers))
-				fs.writeFile(path.join(directory, '.bowerrc'), '{"directory": "dist/bower_components"}', errHandler);
+		// .bowerrc
+		if (isNode(answers))
+			fs.writeFile(path.join(directory, '.bowerrc'), '{"directory": "dist/bower_components"}', errHandler);
 
-			// bower.json
-			fs.writeFile(path.join(directory, 'bower.json'), JSON.stringify(bower, null, '\t'), errHandler);
-		}
+		// bower.json
+		fs.writeFile(path.join(directory, 'bower.json'), JSON.stringify(bower, null, '\t'), errHandler);
 
 		// package.json
 		fs.writeFile(path.join(directory, 'package.json'), JSON.stringify(info, null, '\t'), errHandler);
