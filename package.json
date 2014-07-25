@@ -1,17 +1,16 @@
 {
-  "name": "mysandbox",
+  "name": "carpenter",
   "version": "0.1.0",
-  "private": false,
   "bin": {
-    "mysandbox": "./main.js"
+    "carpenter": "./main.js"
   },
-  "description": "mysandbox is a tool for testing your ideas faster.",
+  "description": "carpenter is a tool for quickly setting up your projects.",
   "repository": {
     "type": "git",
     "url": "https://github.com/pimolo/carpenter/"
   },
   "author": "Rémi Andrieux <pimolo10300@gmail.com>",
-  "contributors": "Léo-Paul Couturier <leopaul3@gmail.com>",
+  "contributors": ["Léo-Paul Couturier <leopaul3@gmail.com>"],
   "preferGlobal": true,
   "dependencies": {
     "inquirer": "^0.5.1",
