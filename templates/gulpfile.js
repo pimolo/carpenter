@@ -48,7 +48,8 @@ gulp.task('style', function () {
 <% } else { %>
 	gulp.src('src/**/*.css')
 <% } %>
-	.pipe(gulp.dest('dist/'));
+	.pipe(gulp.dest('dist/'))
+	.pipe(livereload());
 });
 
 gulp.task('script', function () {
@@ -60,7 +61,8 @@ gulp.task('script', function () {
 <% } else { %>
 	gulp.src('src/**/*.js')
 <% } %>
-	.pipe(gulp.dest('dist/'));
+	.pipe(gulp.dest('dist/'))
+	.pipe(livereload());
 });
 
 gulp.task('html', function () {
@@ -77,33 +79,34 @@ gulp.task('html', function () {
 <% } else { %>
 	gulp.src('src/**/*.html')
 <% } %>
-	.pipe(gulp.dest('dist/'));
+	.pipe(gulp.dest('dist/'))
+	.pipe(livereload());
 });
 
 gulp.task('watch', function() {
 	livereload.listen();
 	<% if(data.cssTemplate === 'Sass') { %>
-		gulp.watch('src/**/*.scss', ['style']).on('change', function() {livereload.changed();});
+		gulp.watch('src/**/*.scss', ['style']);
 	<% } else if(data.cssTemplate === 'Less') { %>
-		gulp.watch('src/**/*.less', ['style']).on('change', function() {livereload.changed();});
+		gulp.watch('src/**/*.less', ['style']);
 	<% } else if(data.cssTemplate === 'Stylus') { %>
-		gulp.watch('src/**/*.styl', ['style']).on('change', function() {livereload.changed();});
+		gulp.watch('src/**/*.styl', ['style']);
 	<% } else { %>
-		gulp.watch('src/**/*.css', ['style']).on('change', function() {livereload.changed();});
+		gulp.watch('src/**/*.css', ['style']);
 	<% } %>
 
 	<% if(data.jsTemplate !== 'JS') { %>
-		gulp.watch('src/**/*.coffee', ['script']).on('change', function() {livereload.changed();});
+		gulp.watch('src/**/*.coffee', ['script']);
 	<% } else { %>
-		gulp.watch('src/**/*.js', ['script']).on('change', function() {livereload.changed();});
+		gulp.watch('src/**/*.js', ['script']);
 	<% } %>
 
 	<% if(data.htmlTemplate === 'Jade') { %>
-		gulp.watch('src/**/*.jade', ['html']).on('change', function() {livereload.changed();});
+		gulp.watch('src/**/*.jade', ['html']);
 	<% } else if(data.htmlTemplate === 'EJS') { %>
-		gulp.watch('src/**/*.ejs', ['html']).on('change', function() {livereload.changed();});
+		gulp.watch('src/**/*.ejs', ['html']);
 	<% } else { %>
-		gulp.watch('src/**/*.html', ['html']).on('change', function() {livereload.changed();});
+		gulp.watch('src/**/*.html', ['html']);
 	<% } %>
 });
 
