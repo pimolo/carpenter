@@ -56,7 +56,13 @@ inquirer.prompt([{
 	type: 'list',
 	name: 'jsTemplate',
 	message: 'What JavaScript language do you want to use ?',
-	choices: ['JavaScript', 'CoffeeScript'],
+	choices: [{
+		name: 'JavaScript',
+		value: 'JS'
+	}, {
+		name: 'CoffeeScript',
+		value: 'coffee'
+	}],
 	when: isNode
 }, {
 	type: 'list',
@@ -212,6 +218,34 @@ inquirer.prompt([{
 			parseTemplate(path.join(__dirname, 'templates', 'gulpfile.js'), path.join(directory, 'Gulpfile.js'), answers);
 		} else if (answers.taskRunner === 'Grunt') {
 			info.devDependencies.grunt = '*';
+			info.devDependencies['grunt-express-server'] = '*';
+			info.devDependencies['grunt-contrib-watch'] = '*';
+			switch(answers.htmlTemplate) {
+				case 'Jade':
+					info.devDependencies['grunt-contrib-jade'] = '*';
+					break;
+				case 'EJS':
+					info.devDependencies['grunt-ejs'] = '*';
+			}
+			switch(answers.cssTemplate) {
+				case 'Sass':
+					info.devDependencies['grunt-contrib-sass'] = '*';
+					break;
+				case 'Less':
+					info.devDependencies['grunt-contrib-less'] = '*';
+					break;
+				case 'Stylus':
+					info.devDependencies['grunt-contrib-stylus'] = '*';
+			}
+			switch(answers.jsTemplate) {
+				case 'CoffeeScript':
+					info.devDependencies['grunt-contrib-coffee'] = '*';
+			}
+
+			if(answers.htmlTemplate === 'HTML' || answers.cssTemplate === 'CSS' || answers.jsTemplate === 'JS') {
+				info.devDependencies['grunt-contrib-copy'] = '*';
+			}
+
 			// Gruntfile
 			parseTemplate(path.join(__dirname, 'templates', 'Gruntfile.js'), path.join(directory, 'Gruntfile.js'), answers);
 		}
