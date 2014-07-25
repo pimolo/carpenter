@@ -1,5 +1,29 @@
 module.exports = function(grunt) {
     // Configuration
+
+    var glob = require('glob'),
+        bower = {css: [], js: []};
+    glob.sync('bower_components/**/.bower.json').forEach(function(e) {
+        var data = require('./' + e).main;
+        if(data instanceof Array) {
+            data.forEach(function(e) {
+                if(e) {
+                    var match = e.match(/js|css$/);
+                    if(match){
+                        bower[match[0]].push(e.replace(/^\.\//, ''));
+                    }
+                }
+            });
+        } else {
+            if(data) {
+                var match = data.match(/js|css$/);
+                if(match) {
+                    bower[match[0]].push(data.replace(/^\.\//, ''));
+                }
+            }
+        }
+    });
+
     grunt.initConfig({
         pkg: grunt.file.readJSON('package.json'),
         <% if(data.htmlTemplate === 'HTML' || data.cssTemplate === 'CSS' || data.jsTemplate === 'JS') { %>
@@ -125,6 +149,16 @@ module.exports = function(grunt) {
             }
         },
         <% } %>
+        concat: {
+            bower_css: {
+                src: bower.css,
+                dest: 'dist/css/dependencies.css'
+            },
+            bower_js: {
+                src: bower.js,
+                dest: 'dist/js/dependencies.js'
+            }
+        },
         express: {
             serve: {
                 options: {
@@ -212,6 +246,7 @@ module.exports = function(grunt) {
     grunt.loadNpmTasks('grunt-contrib-copy');
     <% } %>
 
+    grunt.loadNpmTasks('grunt-contrib-concat');
     grunt.loadNpmTasks('grunt-express-server');
     grunt.loadNpmTasks('grunt-open');
     grunt.loadNpmTasks('grunt-contrib-watch');
@@ -239,6 +274,7 @@ module.exports = function(grunt) {
     <% } else { %>
     'copy:js',
     <% } %>
+    'concat',
     'express',
     'open',
     'watch'

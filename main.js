@@ -200,6 +200,8 @@ inquirer.prompt([{
 			info.devDependencies.gulp = '*';
 			info.devDependencies['gulp-livereload'] = '*';
 			info.devDependencies['gulp-sourcemaps'] = '*';
+			info.devDependencies['gulp-concat'] = '*';
+			info.devDependencies['main-bower-files'] = '*';
 			info.devDependencies.openurl = '*';
 			switch(answers.htmlTemplate) {
 				case 'Jade':
@@ -230,6 +232,8 @@ inquirer.prompt([{
 			info.devDependencies['grunt-express-server'] = '*';
 			info.devDependencies['grunt-contrib-watch'] = '*';
 			info.devDependencies['grunt-open'] = '*';
+			info.devDependencies['glob'] = '*';
+			info.devDependencies['grunt-contrib-concat'] = '*';
 			switch(answers.htmlTemplate) {
 				case 'Jade':
 					info.devDependencies['grunt-contrib-jade'] = '*';
@@ -302,7 +306,7 @@ inquirer.prompt([{
 		});
 
 		// .bowerrc
-		if (isNode(answers))
+		if (isNode(answers) && answers.taskRunner === "None")
 			fs.writeFile(path.join(directory, '.bowerrc'), '{"directory": "dist/bower_components"}', errHandler);
 
 		// bower.json

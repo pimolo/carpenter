@@ -26,6 +26,8 @@ var gulp = require('gulp'),
 <% if(data.platform === 'Node.js') { %>
 	spawn = require('child_process').spawn,
 <% } %>
+	concat = require('gulp-concat'),
+	bower_files = require('main-bower-files'),
 	path = require('path'),
 	pkg = require('./package.json');
 
@@ -83,6 +85,16 @@ gulp.task('html', function () {
 	.pipe(livereload());
 });
 
+gulp.task('bower', function() {
+	gulp.src(bower_files().filter(function(e){return e.match(/\.css$/)}))
+	.pipe(concat('dependencies.css'))
+	.pipe(gulp.dest("dist/css/"));
+
+	gulp.src(bower_files().filter(function(e){return e.match(/\.js$/)}))
+	.pipe(concat('dependencies.js'))
+	.pipe(gulp.dest("dist/js/"));
+});
+
 gulp.task('watch', function() {
 	livereload.listen();
 	<% if(data.cssTemplate === 'Sass') { %>
@@ -122,4 +134,4 @@ gulp.task('serve', function() {
 });
 <% } %>
 
-gulp.task('default', ['html','style', 'script', <% if(data.platform === 'Node.js') { %>'serve'<% } %>, 'watch']);
+gulp.task('default', ['html','style', 'script', 'bower', <% if(data.platform === 'Node.js') { %>'serve'<% } %>, 'watch']);
