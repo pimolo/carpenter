@@ -224,6 +224,7 @@ inquirer.prompt([{
 			info.devDependencies.grunt = '*';
 			info.devDependencies['grunt-express-server'] = '*';
 			info.devDependencies['grunt-contrib-watch'] = '*';
+			info.devDependencies['grunt-open'] = '*';
 			switch(answers.htmlTemplate) {
 				case 'Jade':
 					info.devDependencies['grunt-contrib-jade'] = '*';

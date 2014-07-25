@@ -132,6 +132,11 @@ module.exports = function(grunt) {
                 }
             }
         },
+        open: {
+            server: {
+                path: 'http://localhost:3000/'
+            }
+        },
         watch: {
             template: {
                 <% if(data.htmlTemplate === 'Jade') { %>
@@ -208,6 +213,7 @@ module.exports = function(grunt) {
     <% } %>
 
     grunt.loadNpmTasks('grunt-express-server');
+    grunt.loadNpmTasks('grunt-open');
     grunt.loadNpmTasks('grunt-contrib-watch');
 
     // Default task
@@ -234,6 +240,7 @@ module.exports = function(grunt) {
     'copy:js',
     <% } %>
     'express',
+    'open',
     'watch'
     ]);
 };
