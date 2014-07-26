@@ -18,6 +18,8 @@
     "inquirer": "^0.5.1",
     "chalk": "^0.5.1",
     "lodash": "^2.4.1",
-    "npm": "^1.4.21"
+    "npm": "^1.4.21",
+    "event-stream": "^3.1.7",
+    "node-beautify": "0.0.2"
   }
 }

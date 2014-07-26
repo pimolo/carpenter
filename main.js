@@ -7,6 +7,8 @@ var fs = require('fs'),
 	util = require('util'),
 	path = require('path'),
 	npm = require('npm'),
+	es = require('event-stream'),
+	beautify = require('node-beautify'),
 	pkg = require('./package.json');
 
 console.log('Welcome to ' + chalk.bold(pkg.name) + ', your favorite tool to quickly create your little projects !');
@@ -24,12 +26,22 @@ function copy(from, to) {
 }
 
 function parseTemplate(origin, dest, data) {
-	dest = fs.createWriteStream(dest);
-	fs.createReadStream(origin).on('data', function (chunk) {
-		dest.write(_.template(chunk, data, {
-			variable: 'data'
-		}));
-	});
+	fs.createReadStream(origin)
+	.pipe(es.map(function (file, cb) {
+		cb(null, _.template(file, data, {variable: 'data'}));
+	}))
+	.pipe(es.map(function(file, cb) {
+		if(origin.match(/\.js$/))
+			cb(null, beautify.beautifyJs(file, {
+				indentSize: 1,
+				indentChar: '\t',
+				jslintHappy: true,
+				preserveNewlines: false
+			}));
+		else
+			cb(null, file);
+	}))
+	.pipe(fs.createWriteStream(dest));
 }
 
 inquirer.prompt([{
@@ -313,11 +325,17 @@ inquirer.prompt([{
 		// package.json
 		fs.writeFile(path.join(directory, 'package.json'), JSON.stringify(info, null, '\t'), errHandler);
 
-		npm.load(function(err, npm) {
+		npm.load({
+			loglevel: 'silent',
+			parseable: false
+		}, function(err, npm) {
+			var log = console.log;
+    		console.log = function(){};
 			npm.prefix = directory;
 			npm.dir = npm.root = path.join(directory, 'node_modules');
-			npm.config.set('loglevel', 'error');
-			npm.install();
+			npm.commands.install([], function() {
+				console.log = log;
+			});
 		});
 	});
 });
