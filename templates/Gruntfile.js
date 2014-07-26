@@ -1,29 +1,5 @@
 module.exports = function(grunt) {
     // Configuration
-
-    var glob = require('glob'),
-        bower = {css: [], js: []};
-    glob.sync('bower_components/**/.bower.json').forEach(function(e) {
-        var data = require('./' + e).main;
-        if(data instanceof Array) {
-            data.forEach(function(e) {
-                if(e) {
-                    var match = e.match(/js|css$/);
-                    if(match){
-                        bower[match[0]].push(e.replace(/^\.\//, ''));
-                    }
-                }
-            });
-        } else {
-            if(data) {
-                var match = data.match(/js|css$/);
-                if(match) {
-                    bower[match[0]].push(data.replace(/^\.\//, ''));
-                }
-            }
-        }
-    });
-
     grunt.initConfig({
         pkg: grunt.file.readJSON('package.json'),
         <% if(data.htmlTemplate === 'HTML' || data.cssTemplate === 'CSS' || data.jsTemplate === 'JS') { %>
@@ -149,16 +125,24 @@ module.exports = function(grunt) {
             }
         },
         <% } %>
+        <% if(data.dependencies.length > 0) { %>
         concat: {
             bower_css: {
-                src: bower.css,
+                src: [
+                    <% if(data.dependencies.indexOf('bootstrap') > -1) { %>'bower_components/bootstrap/dist/css/bootstrap.min.css', <% } %>
+                    <% if(data.dependencies.indexOf('fontawesome') > -1) { %>'bower_components/fontawesome/css/fontawesome.min.css'<% } %>
+                ],
                 dest: 'dist/css/dependencies.css'
             },
             bower_js: {
-                src: bower.js,
+                src: [
+                    <% if(data.dependencies.indexOf('jquery') > -1) { %>'bower_components/jquery/dist/jquery.min.js', <% } %>
+                    <% if(data.dependencies.indexOf('angular') > -1) { %>'bower_components/angular/angular.min.js', <% } %>
+                    <% if(data.dependencies.indexOf('bootstrap') > -1) { %>'bower_components/bootstrap/dist/js/bootstrap.min.js'<% } %>]
                 dest: 'dist/js/dependencies.js'
             }
         },
+        <% } %>
         express: {
             serve: {
                 options: {
@@ -274,7 +258,9 @@ module.exports = function(grunt) {
     <% } else { %>
     'copy:js',
     <% } %>
+    <% if(data.dependencies.length > 0) { %>
     'concat',
+    <% } %>
     'express',
     'open',
     'watch'

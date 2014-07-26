@@ -85,6 +85,7 @@ gulp.task('html', function () {
 	.pipe(livereload());
 });
 
+<% if(data.dependencies.length > 0) { %>
 gulp.task('bower', function() {
 	gulp.src(bower_files().filter(function(e){return e.match(/\.css$/)}))
 	.pipe(concat('dependencies.css'))
@@ -94,6 +95,7 @@ gulp.task('bower', function() {
 	.pipe(concat('dependencies.js'))
 	.pipe(gulp.dest("dist/js/"));
 });
+<% } %>
 
 gulp.task('watch', function() {
 	livereload.listen();
@@ -134,4 +136,11 @@ gulp.task('serve', function() {
 });
 <% } %>
 
-gulp.task('default', ['html','style', 'script', 'bower', <% if(data.platform === 'Node.js') { %>'serve'<% } %>, 'watch']);
+gulp.task('default', [
+	'html',
+	'style',
+	'script',
+	<% if(data.dependencies.length > 0) { %>'bower', <% } %>
+	<% if(data.platform === 'Node.js') { %>'serve'<% } %>,
+	'watch'
+]);
