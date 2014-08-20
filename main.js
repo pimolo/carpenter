@@ -36,6 +36,7 @@ function parseTemplate(origin, dest, data) {
 				indentSize: 1,
 				indentChar: '\t',
 				jslintHappy: true,
+				gitHappy: true,
 				preserveNewlines: false
 			}));
 		else

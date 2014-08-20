@@ -27,7 +27,6 @@ var gulp = require('gulp'),
 	spawn = require('child_process').spawn,
 <% } %>
 	concat = require('gulp-concat'),
-	bower_files = require('main-bower-files'),
 	path = require('path'),
 	pkg = require('./package.json');
 
@@ -87,13 +86,24 @@ gulp.task('html', function () {
 
 <% if(data.dependencies.length > 0) { %>
 gulp.task('bower', function() {
-	gulp.src(bower_files().filter(function(e){return e.match(/\.css$/)}))
-	.pipe(concat('dependencies.css'))
-	.pipe(gulp.dest("dist/css/"));
+	<% if(data.dependencies.indexOf('bootstrap') > -1 || data.dependencies.indexOf('fontawesome') > -1) { %>
+		gulp.src([
+			<% if(data.dependencies.indexOf('bootstrap') > -1) { %>'bower_components/bootstrap/dist/css/bootstrap.min.css', <% } %>
+			<% if(data.dependencies.indexOf('fontawesome') > -1) { %>'bower_components/fontawesome/css/fontawesome.min.css'<% } %>
+		])
+		.pipe(concat('dependencies.css'))
+		.pipe(gulp.dest("dist/css/"));
+	<% } %>
 
-	gulp.src(bower_files().filter(function(e){return e.match(/\.js$/)}))
-	.pipe(concat('dependencies.js'))
-	.pipe(gulp.dest("dist/js/"));
+	<% if(data.dependencies.indexOf('jquery') > -1 || data.dependencies.indexOf('angular') > -1 || data.dependencies.indexOf('bootstrap') > -1) { %>
+		gulp.src([
+			<% if(data.dependencies.indexOf('jquery') > -1) { %>'bower_components/jquery/dist/jquery.min.js', <% } %>
+			<% if(data.dependencies.indexOf('angular') > -1) { %>'bower_components/angular/angular.min.js', <% } %>
+			<% if(data.dependencies.indexOf('bootstrap') > -1) { %>'bower_components/bootstrap/dist/js/bootstrap.min.js'<% } %>
+		])
+		.pipe(concat('dependencies.js'))
+		.pipe(gulp.dest("dist/js/"));
+	<% } %>
 });
 <% } %>
 
