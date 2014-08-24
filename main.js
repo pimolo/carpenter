@@ -17,6 +17,10 @@ function isNode(answers) {
 	return answers.platform === 'Node.js';
 }
 
+function srcDir(answers) {
+	return (answers.platform === 'Static') ? '.' : 'src';
+}
+
 function errHandler(err) {
 	if (err) return console.error(err);
 }
@@ -53,7 +57,7 @@ inquirer.prompt([{
 	type: 'list',
 	name: 'platform',
 	message: 'What platform do you want to use ?',
-	choices: ['Node.js', 'PHP']
+	choices: ['Node.js', 'PHP', 'Static']
 }, {
 	type: 'list',
 	name: 'htmlTemplate',
@@ -149,7 +153,7 @@ inquirer.prompt([{
 
 			// main.js
 			parseTemplate(path.join(__dirname, 'templates', 'main.js'), path.join(directory, 'main.js'), answers);
-		} else {
+		} else if(answers.platform === 'PHP') {
 			// index.php
 			parseTemplate(path.join(__dirname, 'templates', 'index.html'), path.join(directory, 'index.php'), answers);
 
@@ -157,50 +161,52 @@ inquirer.prompt([{
 			if (answers.procfile) {
 				fs.writeFile(path.join(directory, 'composer.json'), JSON.stringify({}), errHandler);
 			}
+		} else {
+			//
 		}
 
-		fs.mkdir(path.join(directory, 'src'), function (err) {
+		fs.mkdir(path.join(directory, srcDir(answers)), function (err) {
 			if (err && err.code != 'EEXIST') return console.error(err);
 
 			// Templating language
 			switch(answers.htmlTemplate) {
 				case 'Jade':
-					parseTemplate(path.join(__dirname, 'templates', 'index.jade'), path.join(directory, 'src', 'index.jade'), answers);
+					parseTemplate(path.join(__dirname, 'templates', 'index.jade'), path.join(directory, srcDir(answers), 'index.jade'), answers);
 					break;
 				case 'EJS':
-					parseTemplate(path.join(__dirname, 'templates', 'index.html'), path.join(directory, 'src', 'index.ejs'), answers);
+					parseTemplate(path.join(__dirname, 'templates', 'index.html'), path.join(directory, srcDir(answers), 'index.ejs'), answers);
 					break;
 				default:
-					parseTemplate(path.join(__dirname, 'templates', 'index.html'), path.join(directory, 'src', 'index.html'), answers);
+					parseTemplate(path.join(__dirname, 'templates', 'index.html'), path.join(directory, srcDir(answers), 'index.html'), answers);
 			}
 
 			// CSS template
-			fs.mkdir(path.join(directory, 'src', 'css'), function (err) {
+			fs.mkdir(path.join(directory, srcDir(answers), 'css'), function (err) {
 				if (err && err.code != 'EEXIST') return console.error(err);
 				switch(answers.cssTemplate) {
 					case 'Sass':
-						copy(path.join(__dirname, 'templates', 'main.css'), path.join(directory, 'src', 'css', 'main.scss'));
+						copy(path.join(__dirname, 'templates', 'main.css'), path.join(directory, srcDir(answers), 'css', 'main.scss'));
 						break;
 					case 'Less':
-						copy(path.join(__dirname, 'templates', 'main.css'), path.join(directory, 'src', 'css', 'main.less'));
+						copy(path.join(__dirname, 'templates', 'main.css'), path.join(directory, srcDir(answers), 'css', 'main.less'));
 						break;
 					case 'Stylus':
-						copy(path.join(__dirname, 'templates', 'main.css'), path.join(directory, 'src', 'css', 'main.styl'));
+						copy(path.join(__dirname, 'templates', 'main.css'), path.join(directory, srcDir(answers), 'css', 'main.styl'));
 						break;
 					default:
-						copy(path.join(__dirname, 'templates', 'main.css'), path.join(directory, 'src', 'css', 'main.css'));
+						copy(path.join(__dirname, 'templates', 'main.css'), path.join(directory, srcDir(answers), 'css', 'main.css'));
 				}
 			});
 
 			// JS template
-			fs.mkdir(path.join(directory, 'src', 'js'), function (err) {
+			fs.mkdir(path.join(directory, srcDir(answers), 'js'), function (err) {
 				if (err && err.code != 'EEXIST') return console.error(err);
 				switch(answers.jsTemplate) {
 					case 'Coffee':
-						copy(path.join(__dirname, 'templates', 'script.js'), path.join(directory, 'src', 'js', 'main.coffee'));
+						copy(path.join(__dirname, 'templates', 'script.js'), path.join(directory, srcDir(answers), 'js', 'main.coffee'));
 						break;
 					default:
-						copy(path.join(__dirname, 'templates', 'script.js'), path.join(directory, 'src', 'js', 'main.js'));
+						copy(path.join(__dirname, 'templates', 'script.js'), path.join(directory, srcDir(answers), 'js', 'main.js'));
 				}
 			});
 		});
@@ -212,7 +218,6 @@ inquirer.prompt([{
 			info.devDependencies['gulp-livereload'] = '*';
 			info.devDependencies['gulp-sourcemaps'] = '*';
 			info.devDependencies['gulp-concat'] = '*';
-			info.devDependencies['main-bower-files'] = '*';
 			info.devDependencies.openurl = '*';
 			switch(answers.htmlTemplate) {
 				case 'Jade':
@@ -318,7 +323,7 @@ inquirer.prompt([{
 
 		// .bowerrc
 		if (isNode(answers) && answers.taskRunner === "None")
-			fs.writeFile(path.join(directory, '.bowerrc'), '{"directory": "dist/bower_components"}', errHandler);
+			fs.writeFile(path.join(directory, '.bowerrc'), '{"directory": "' + ((answers.platform === 'Static') ? '.' : 'dist') + '/bower_components"}', errHandler);
 
 		// bower.json
 		fs.writeFile(path.join(directory, 'bower.json'), JSON.stringify(bower, null, '\t'), errHandler);
